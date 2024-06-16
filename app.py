@@ -21,7 +21,7 @@ with st.sidebar:
 # Loan Approval Prediction
 if selected == 'Loan Approval':
     # Page title
-    st.title('Loan Approval Prediction Using ML')
+    st.title('Bank Loan Approval Prediction Using ML')
 
     # Getting the input data from the user
     col1, col2, col3 = st.columns(3)
