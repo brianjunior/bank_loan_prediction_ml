@@ -3,69 +3,111 @@ import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-# Set page configuration
-st.set_page_config(page_title="Loan Approvals",
-                   layout="wide",
-                   page_icon="🧑‍⚕️")
 
-# Loading the saved model
-loans_model = pickle.load(open("saved_model.pkl", "rb"))
-
+model = pickle.load(open('./Model/ML_Model.pkl', 'rb'))
 # Sidebar navigation menu
 with st.sidebar:
-    selected = option_menu('Loan Approval Prediction System',
+    selected = option_menu('Loan Approval',
                            ['Loan Approval', 'See Stats'],
                            icons=['money', 'activity'],
                            default_index=0)
 
 # Loan Approval Prediction
 if selected == 'Loan Approval':
-    # Page title
-    st.title('Bank Loan Approval Prediction Using ML')
+ def run():
+    img1 = Image.open('bank.png')
+    img1 = img1.resize((156, 145))
+    st.image(img1, use_column_width=False)
+    st.title("Bank Loan Prediction using Machine Learning")
 
-    # Getting the input data from the user
-    col1, col2, col3 = st.columns(3)
+    ## Input fields in two columns
+    col1, col2 = st.columns(2)
 
     with col1:
-        name = st.text_input('Full Name')
-        Gender = st.text_input('Gender (0 for Male, 1 for Female)', '0')
+        ## Account No
+        account_no = st.text_input('Account number')
+
+        ## Full Name
+        fn = st.text_input('Full Name')
+
+        ## For gender
+        gen_display = ('Female', 'Male')
+        gen_options = list(range(len(gen_display)))
+        gen = st.selectbox("Gender", gen_options, format_func=lambda x: gen_display[x])
+
+        ## For Marital Status
+        mar_display = ('No', 'Yes')
+        mar_options = list(range(len(mar_display)))
+        mar = st.selectbox("Marital Status", mar_options, format_func=lambda x: mar_display[x])
+
+        ## No of dependents
+        dep_display = ('No', 'One', 'Two', 'More than Two')
+        dep_options = list(range(len(dep_display)))
+        dep = st.selectbox("Dependents", dep_options, format_func=lambda x: dep_display[x])
+
+        ## Applicant Monthly Income
+        mon_income = st.number_input("Applicant's Monthly Income($)", value=0)
+
+        ## Loan Amount
+        loan_amt = st.number_input("Loan Amount", value=0)
+
     with col2:
-        Married = st.text_input('Married (0 for No, 1 for Yes)', '0')
-        Dependents = st.text_input('Dependents (0 for 0, 1 for 1, 2 for 2, 3 for 3+)', '0')
-    with col3:
-        Education = st.text_input('Education (0 for Not Graduate, 1 for Graduate)', '0')
-        Self_Employed = st.text_input('Self Employed (0 for No, 1 for Yes)', '0')
-    with col1:
-        ApplicantIncome = st.text_input('Applicant Income', '0')
-        CoapplicantIncome = st.text_input('Co-Applicant Income', '0')
-    with col2:
-        LoanAmount = st.text_input('Loan Amount', '0')
-        Loan_Amount_Term = st.text_input('Loan Amount Term', '360')
-    with col3:
-        Credit_History = st.text_input('Credit History (0 for No, 1 for Yes)', '0')
-        Property_Area = st.text_input('Property Area (0 for Rural, 1 for Semi, 2 for Urban)', '0')
+        ## For education
+        edu_display = ('Not Graduate', 'Graduate')
+        edu_options = list(range(len(edu_display)))
+        edu = st.selectbox("Education", edu_options, format_func=lambda x: edu_display[x])
 
-    # Code for Prediction
-    approve_loan = ''
+        ## For employment status
+        emp_display = ('Job', 'Business')
+        emp_options = list(range(len(emp_display)))
+        emp = st.selectbox("Employment Status", emp_options, format_func=lambda x: emp_display[x])
 
-    # Creating a button for Prediction
-    if st.button('Loan Approval Prediction'):
-        # Prepare the input data for prediction
-        try:
-            user_input = [
-                float(Gender), float(Married), float(Dependents), float(Education), 
-                float(Self_Employed), float(ApplicantIncome), float(CoapplicantIncome),
-                float(LoanAmount), float(Loan_Amount_Term), float(Credit_History),
-                float(Property_Area)
-            ]
+        ## For Property status
+        prop_display = ('Rural', 'Semi-Urban', 'Urban')
+        prop_options = list(range(len(prop_display)))
+        prop = st.selectbox("Property Area", prop_options, format_func=lambda x: prop_display[x])
 
-            # Make prediction
-            approve_loan = loans_model.predict([user_input])
+        ## For Credit Score
+        cred_display = ('Between 300 to 500', 'Above 500')
+        cred_options = list(range(len(cred_display)))
+        cred = st.selectbox("Credit Score", cred_options, format_func=lambda x: cred_display[x])
 
-            # Display the result with account number and name
-            if approve_loan[0] == 1:
-                st.success(f"Hello {name}, your loan is approved.")
-            else:
-                st.error(f"Hello {name}, your loan has been rejected.")
-        except ValueError as e:
-            st.error(f"Error converting input to numeric: {e}")
+        ## Co-Applicant Monthly Income
+        co_mon_income = st.number_input("Co-Applicant's Monthly Income($)", value=0)
+
+        ## Loan duration
+        dur_display = ['2 Month', '6 Month', '8 Month', '1 Year', '16 Month']
+        dur_options = range(len(dur_display))
+        dur = st.selectbox("Loan Duration", dur_options, format_func=lambda x: dur_display[x])
+
+    if st.button("Submit"):
+        duration = 0
+        if dur == 0:
+            duration = 60
+        if dur == 1:
+            duration = 180
+        if dur == 2:
+            duration = 240
+        if dur == 3:
+            duration = 360
+        if dur == 4:
+            duration = 480
+        features = [[gen, mar, dep, edu, emp, mon_income, co_mon_income, loan_amt, duration, cred, prop]]
+        print(features)
+        prediction = model.predict(features)
+        lc = [str(i) for i in prediction]
+        ans = int("".join(lc))
+        if ans == 0:
+            st.error(
+                "Hello: " + fn + " || "
+                "Account number: " + account_no + ' || '
+                'According to our Calculations, you will not get the loan from Bank'
+            )
+        else:
+            st.success(
+                "Hello: " + fn + " || "
+                "Account number: " + account_no + ' || '
+                'Congratulations!! you will get the loan from Bank'
+            )
+
+run()
