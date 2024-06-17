@@ -93,19 +93,22 @@ def run():
         
         try:
             prediction = model.predict(features)
-            ans = int(prediction[0])
-            if ans == 0:
-                st.error(
-                    f"Hello: {fn} || "
-                    f"Account number: {account_no} || "
-                    'According to our calculations, you will not get the loan from the bank'
-                )
+            if isinstance(prediction[0], (int, float)):
+                ans = int(prediction[0])
+                if ans == 0:
+                    st.error(
+                        f"Hello: {fn} || "
+                        f"Account number: {account_no} || "
+                        'According to our calculations, you will not get the loan from the bank'
+                    )
+                else:
+                    st.success(
+                        f"Hello: {fn} || "
+                        f"Account number: {account_no} || "
+                        'Congratulations!! you will get the loan from the bank'
+                    )
             else:
-                st.success(
-                    f"Hello: {fn} || "
-                    f"Account number: {account_no} || "
-                    'Congratulations!! you will get the loan from the bank'
-                )
+                st.error(f"Unexpected prediction result: {prediction[0]}")
         except Exception as e:
             st.error(f"Error making prediction: {e}")
 
