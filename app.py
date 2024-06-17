@@ -3,7 +3,10 @@ import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-
+# Set page configuration
+st.set_page_config(page_title="Loan Approvals",
+                   layout="wide",
+                   page_icon="🧑‍⚕️")
 model = pickle.load(open('saved_model.pkl', 'rb'))
 # Sidebar navigation menu
 with st.sidebar:
@@ -18,7 +21,7 @@ if selected == 'Loan Approval':
     # img1 = Image.open('bank.png')
     # img1 = img1.resize((156, 145))
     # st.image(img1, use_column_width=False)
-    st.title("Bank Loan Prediction using Machine Learning")
+    st.title("Bank Loan Prediction using ML")
 
     ## Input fields in two columns
     col1, col2 = st.columns(2)
