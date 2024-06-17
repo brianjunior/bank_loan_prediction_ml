@@ -101,13 +101,13 @@ if selected == 'Loan Approval':
             st.error(
                 "Hello: " + fn + " || "
                 "Account number: " + account_no + ' || '
-                'According to our Calculations, you will not get the loan from Bank'
+                'According to our Calculations, your loan has been rejected'
             )
         else:
             st.success(
                 "Hello: " + fn + " || "
                 "Account number: " + account_no + ' || '
-                'Congratulations!! you will get the loan from Bank'
+                'Congratulations!! you are eligible for the loan'
             )
 
 run()
