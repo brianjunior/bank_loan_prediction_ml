@@ -9,7 +9,7 @@ st.set_page_config(page_title="Loan Approvals",
                    page_icon="🧑‍⚕️")
 
 # Loading the saved model
-loans_model = pickle.load(open("saved_model.sav", "rb"))
+loans_model = pickle.load(open("saved_model.pkl", "rb"))
 
 # Sidebar navigation menu
 with st.sidebar:
