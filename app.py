@@ -66,6 +66,6 @@ if selected == 'Loan Approval':
             if approve_loan[0] == 1:
                 st.success(f"Hello {name}, your loan is approved.")
             else:
-                st.error(f"Hello {name}, your loan is not approved.")
+                st.error(f"Hello {name}, your loan has been rejected.")
         except ValueError as e:
             st.error(f"Error converting input to numeric: {e}")
