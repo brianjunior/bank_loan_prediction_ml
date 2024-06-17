@@ -4,7 +4,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 
-model = pickle.load(open('./Model/ML_Model.pkl', 'rb'))
+model = pickle.load(open('saved_model.pkl', 'rb'))
 # Sidebar navigation menu
 with st.sidebar:
     selected = option_menu('Loan Approval',
@@ -15,9 +15,9 @@ with st.sidebar:
 # Loan Approval Prediction
 if selected == 'Loan Approval':
  def run():
-    img1 = Image.open('bank.png')
-    img1 = img1.resize((156, 145))
-    st.image(img1, use_column_width=False)
+    # img1 = Image.open('bank.png')
+    # img1 = img1.resize((156, 145))
+    # st.image(img1, use_column_width=False)
     st.title("Bank Loan Prediction using Machine Learning")
 
     ## Input fields in two columns
